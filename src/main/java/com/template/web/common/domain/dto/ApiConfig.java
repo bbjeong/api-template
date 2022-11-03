@@ -12,14 +12,12 @@ public class ApiConfig {
 
     private String reqUniqNo;
 
-    private String merchantGuid;
 
-    public ApiConfig(String apiId, String signKey, String encryptKey, String iv, String reqUniqNo, String merchantGuid) {
+    public ApiConfig(String apiId, String signKey, String encryptKey, String iv, String reqUniqNo) {
         this.apiId = apiId;
         this.signKey = signKey;
         this.encryptKey = encryptKey;
         this.iv = iv;
         this.reqUniqNo = reqUniqNo;
-        this.merchantGuid = merchantGuid;
     }
 }

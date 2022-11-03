@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.template.web.common.utils.ConfigKeyUtils.BanknersConfigKey.*;
+import static com.template.web.common.utils.ConfigKeyUtils.ApiConfigKey.*;
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +22,7 @@ public class ConfigService {
         String signKey = configRepository.findByConfigIds(CONFIG_SIGN_KEY).orElseThrow().getConfigVal();
         String encryptKey = configRepository.findByConfigIds(CONFIG_ENCRYPT_KEY).orElseThrow().getConfigVal();
         String iv = configRepository.findByConfigIds(CONFIG_IV).orElseThrow().getConfigVal();
-        String merchantGuid = configRepository.findByConfigIds(CONFIG_MERCHANT_GUID).orElseThrow().getConfigVal();
 
-        return new ApiConfig(apiId, signKey, encryptKey, iv, reqUniqNo, merchantGuid);
+        return new ApiConfig(apiId, signKey, encryptKey, iv, reqUniqNo);
     }
 }
