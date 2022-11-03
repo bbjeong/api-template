@@ -1,4 +1,10 @@
 package com.template.web.api.domain.user;
 
-public class GetUserApiResponse {
+import com.template.web.api.domain.ApiResponse;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@ToString
+public class GetUserApiResponse implements ApiResponse {
 }

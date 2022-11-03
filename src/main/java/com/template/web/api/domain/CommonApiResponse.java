@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class BanknersCommonApiResponse<T> {
+public class CommonApiResponse<T> {
     private String code;
     private int status;
     private String message;

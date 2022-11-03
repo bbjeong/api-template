@@ -1,0 +1,5 @@
+### 유저 상세 조회
+GET https://stg.api.com/api/user?id=99
+Accept: application/json
+
+
