@@ -1,4 +1,4 @@
-package com.template.web.api.constants;
+package com.template.web.external.api.constants;
 
 import lombok.experimental.UtilityClass;
 

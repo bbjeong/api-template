@@ -1,4 +1,4 @@
-package com.template.web.api.webclient;
+package com.template.web.external.api.webclient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import com.template.web.api.domain.ApiRequest;
-import com.template.web.api.domain.ApiResponse;
-import com.template.web.api.domain.CommonApiResponse;
+import com.template.web.external.api.domain.ExternalApiRequest;
+import com.template.web.external.api.domain.ExternalApiResponse;
+import com.template.web.external.api.domain.ExternalCommonApiResponse;
 import com.template.web.common.domain.dto.ApiConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-import static com.template.web.api.constants.ApiCodeConstants.SUCCESS_CODE;
-import static com.template.web.api.constants.ApiFieldConstants.*;
+import static com.template.web.external.api.constants.ApiCodeConstants.SUCCESS_CODE;
+import static com.template.web.external.api.constants.ApiFieldConstants.*;
 
 @Slf4j
 @Component
@@ -40,14 +40,14 @@ public class WebClientService {
 
     private final WebClient webClient = WebClient.create();
 
-    public <T extends ApiResponse> T executeGet(String apiUri, ApiConfig config
-            , TypeReference<CommonApiResponse<T>> typeReference) throws Exception {
+    public <T extends ExternalApiResponse> T executeGet(String apiUri, ApiConfig config
+            , TypeReference<ExternalCommonApiResponse<T>> typeReference) throws Exception {
         return executeGet(apiUri, null, config, typeReference);
     }
 
-    public <T extends ApiResponse> T executeGet(String apiUri
-            , ApiRequest request, ApiConfig config
-            , TypeReference<CommonApiResponse<T>> typeReference) throws Exception {
+    public <T extends ExternalApiResponse> T executeGet(String apiUri
+            , ExternalApiRequest request, ApiConfig config
+            , TypeReference<ExternalCommonApiResponse<T>> typeReference) throws Exception {
 
         Consumer<HttpHeaders> headers = WebClientHeaderUtil.make(config.getApiId(), config.getReqUniqNo(), config.getSignKey());
 
@@ -61,7 +61,7 @@ public class WebClientService {
         }
 
         log.info("request get - uri: {}, parameters: {}", apiUri, parameters);
-        CommonApiResponse<T> apiResponse = get(headers, uri, typeReference);
+        ExternalCommonApiResponse<T> apiResponse = get(headers, uri, typeReference);
         if (!SUCCESS_CODE.equals(apiResponse.getCode())) {
             throw new Exception(apiResponse.getCode() + " - " + apiResponse.getMessage());
         }
@@ -69,14 +69,14 @@ public class WebClientService {
         return apiResponse.getData();
     }
 
-    public <T extends ApiResponse> T executePost(String apiUri
-            , ApiRequest request, ApiConfig config, TypeReference<CommonApiResponse<T>> typeReference) throws Exception {
+    public <T extends ExternalApiResponse> T executePost(String apiUri
+            , ExternalApiRequest request, ApiConfig config, TypeReference<ExternalCommonApiResponse<T>> typeReference) throws Exception {
 
         Consumer<HttpHeaders> headers = WebClientHeaderUtil.make(config.getApiId(), config.getReqUniqNo(), config.getSignKey());
 
         String jsonBody = new ObjectMapper().writeValueAsString(request);
         log.info("request post - uri: {}, body: {}", apiUri, jsonBody);
-        CommonApiResponse<T> apiResponse = post(headers, apiDomain + apiUri, jsonBody, typeReference);
+        ExternalCommonApiResponse<T> apiResponse = post(headers, apiDomain + apiUri, jsonBody, typeReference);
 
         if (!SUCCESS_CODE.equals(apiResponse.getCode())) {
             log.error("invalid response code - code: {}, status: {}, message: {}", apiResponse.getCode(), apiResponse.getStatus(), apiResponse.getMessage());
@@ -86,8 +86,8 @@ public class WebClientService {
         return apiResponse.getData();
     }
 
-    private <T> CommonApiResponse<T> get(Consumer<HttpHeaders> headers, URI uri
-            , TypeReference<CommonApiResponse<T>> typeReference) throws Exception {
+    private <T> ExternalCommonApiResponse<T> get(Consumer<HttpHeaders> headers, URI uri
+            , TypeReference<ExternalCommonApiResponse<T>> typeReference) throws Exception {
 
         String jsonString = webClient
                 .method(HttpMethod.GET)
@@ -103,8 +103,8 @@ public class WebClientService {
         return convertJsonStringToObject(HttpMethod.GET, jsonString, typeReference);
     }
 
-    private <T> CommonApiResponse<T> post(Consumer<HttpHeaders> headers
-            , String baseUrl, String encryptBody, TypeReference<CommonApiResponse<T>> typeReference) throws Exception {
+    private <T> ExternalCommonApiResponse<T> post(Consumer<HttpHeaders> headers
+            , String baseUrl, String encryptBody, TypeReference<ExternalCommonApiResponse<T>> typeReference) throws Exception {
 
         String jsonString = webClient
                 .method(HttpMethod.POST)
@@ -122,7 +122,7 @@ public class WebClientService {
         return convertJsonStringToObject(HttpMethod.POST, jsonString, typeReference);
     }
 
-    private <T> CommonApiResponse<T> convertJsonStringToObject(HttpMethod httpMethod, String jsonString, TypeReference<CommonApiResponse<T>> typeReference) throws JsonProcessingException {
+    private <T> ExternalCommonApiResponse<T> convertJsonStringToObject(HttpMethod httpMethod, String jsonString, TypeReference<ExternalCommonApiResponse<T>> typeReference) throws JsonProcessingException {
 
         log.info("{} response - body: {}", httpMethod.toString(), jsonString);
 

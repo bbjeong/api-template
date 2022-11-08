@@ -1,4 +1,4 @@
-package com.template.web.api.webclient;
+package com.template.web.external.api.webclient;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.util.LinkedMultiValueMap;
